@@ -1,0 +1,34 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
+IPK - Počítačové komunikace a sítě						|
+Projekt 2: Jednoduchý tester end-to-end parametrů sítě				|
+										|
+Autor: Stanislav Nechutný - xnechu01						|
+										|
+=== Implementace ===								|
+										|
+	Pro implementaci byl zvolen jazyk C pro jeho jednoduchost a rychlost.	|
+	Aplikace se skládá z 2 výsledných binárních soubor - ipkperfserver a	|
+	ipkperfclient, kdy server pouze zašle identický UDP paket, který přijal	|
+	na adresu odesílatele.							|
+	Klient při startu provede fork na dva procesy, kdy rodič je řídícím	|
+	procesem, který běží ve smyčce, odešle zformátvaný UDP paket,		|
+	zkontroluje, zda nedošlo k dosažení časového intervalu a uspí se na daný|
+	počet mikrosekund, aby odeslal další paket ve správném čase. V případě	|
+	že je dosažen časový interval odešle dětskému procesu signál SIGUSR1,	|
+	který způsobí výpočet statistik za uběhlý interval a jeho zapsání do	|
+	souboru.								|
+	Dětský proces má na starosti přijímání paketů a ukládání získaných údajů|
+	do  proměnných, z kterých je při přijetí signálu proveden výpočet.	|
+										|
+=== Formát UDP paketu ===							|
+										|
+	Jelikož je minimální velikost paketu 10 bajtů, tak první 4 bajty jsou	|
+	využity pro uložení pořadového čísla paketu. Toto číslo slouží zejména	|
+	pro kontrolu, zda jsou pakety doručovány ve správném pořadí.		|
+	Další 4 bajty (32 bit unsigned int) je počet mikrosekund, které uplynuly|
+	od spuštění programu. Na základě rozdílu aktuálního času a času uvedeném|
+	v paketu je vypočtena doba, kterou trvala cesta.			|
+	Zbylých 16 bitů je využitu pro kontrolní součet, zda nedošlo cestou k	|
+	poškození paketu.							|
+										|
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*

@@ -1,0 +1,28 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[left=2cm,right=2cm,top=2.5cm,bottom=2cm]{geometry}
+\author{Stanislav Nechutný}
+\begin{document}
+Stanislav Nechutný (xnechu01)
+
+1. projekt IPK
+
+\section{Protokol}
+	Pro komunikaci byla zvolena kombinace binárního protokolu s textovým, kdy prvních 8 bitů je číslice reprezentující formát přenášených dat. V závislosti na tomto formátu je následný zbytek zprávy načten a zpracován.
+	
+	\subsection{Komunikace}
+	Komunikace je zahájena klientem odesláním paketu s typovým číslem 0 a očekává od serveru odpověď s kódem 1.
+	
+	Následně je zaslána další část s kódem 2 následovaná polem hodnot enumu s hodnotami reprezentující parametry přenosu - jaké hodnoty z /etc/passwd jsou požadovány a v jakém pořadí. Server na přijetí těchto dat odpoví kódem 7, značícím "OK" - tedy, že je připraven přijímat požadavky a zasílat data.
+	
+	Klient začne zasílat jednotlivé požadavky s kódem 3 (login), nebo 4 (UID) a v datové části je vždy umístěno vyhledávané uživatelské jméno, nebo číslo UID. Server při přijetí provede vyhledání a v závislosti na úspěšnosti nalezení dat odesílá kód 5 s řetězcem obsahující pouze požadované údaje, nebo kód 10 s popisem chyby.
+	
+	Poté, co klient přijme všechna dotázaná data a již nemá zájem o další odešle kód 6 - End a ukončí spojení.
+	
+	
+\end{document}
